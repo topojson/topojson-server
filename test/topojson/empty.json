@@ -1,0 +1,11 @@
+{
+  "type": "Topology",
+  "objects": {
+    "multilinestring": {"type": null},
+    "multipoint": {"type": null},
+    "multipolygon": {"type": null},
+    "multipolygon2": {"type": null},
+    "polygon": {"type": null}
+  },
+  "arcs": []
+}
