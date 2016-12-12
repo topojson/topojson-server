@@ -8,7 +8,7 @@ var fs = require("fs"),
 
 commander
     .version(require("../package.json").version)
-    .usage("[options] <name:file>…")
+    .usage("[options] <[name=]file>…")
     .description("Converts GeoJSON features to TopoJSON objects.")
     .option("-o, --out <file>", "output file name; defaults to “-” for stdout", "-")
     .option("-n, --newline-delimited", "accept newline-delimited JSON")

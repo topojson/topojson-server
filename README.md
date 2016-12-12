@@ -31,7 +31,7 @@ If a *quantization* parameter is specified, the input geometry is quantized prio
 
 ### geo2topo
 
-<a name="geo2topo" href="#geo2topo">#</a> <b>geo2topo</b> [<i>options…</i>] &lt;<i>name</i>=<i>file</i>&gt;… [<>](https://github.com/topojson/topojson/blob/master/bin/geo2topo "Source")
+<a name="geo2topo" href="#geo2topo">#</a> <b>geo2topo</b> [<i>options…</i>] &lt;[<i>name</i>=]<i>file</i>&gt;… [<>](https://github.com/topojson/topojson/blob/master/bin/geo2topo "Source")
 
 Converts one or more GeoJSON objects to an output topology. For example, to convert the us-states.json GeoJSON FeatureCollection to a TopologyJSON topology with the “states” object in us.json:
 
@@ -39,7 +39,7 @@ Converts one or more GeoJSON objects to an output topology. For example, to conv
 geo2topo states=us-states.json > us.json
 ```
 
-For convenience, you can omit the object name and specify only the file *name*; the object name will be the basename of the file, with the directory and extension removed. For example, to convert the states.json GeoJSON FeatureCollection to a TopologyJSON topology with the “states” object in us.json:
+For convenience, you can omit the object name and specify only the output *file* name; the object name will be the basename of the file, with the directory and extension removed. For example, to convert the states.json GeoJSON FeatureCollection to a TopologyJSON topology with the “states” object in us.json:
 
 ```
 geo2topo states.json > us.json
