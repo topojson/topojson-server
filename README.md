@@ -45,6 +45,8 @@ For convenience, you can omit the object name and specify only the output *file*
 geo2topo states.json > us.json
 ```
 
+Any properties and identifiers of input [feature objects](https://tools.ietf.org/html/rfc7946#section-3.2) are propagated to the output. If you want to transform or filter properties, try [ndjson-cli](https://github.com/mbostock/ndjson-cli) as demonstrated in [Command-Line Cartography](https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c).
+
 See also [topo2geo](https://github.com/topojson/topojson-client/blob/master/README.md#topo2geo).
 
 <a name="geo2topo_help" href="#geo2topo_help">#</a> geo2topo <b>-h</b>
