@@ -21,7 +21,7 @@ var topology = topojson.topology({foo: geojson});
 
 ## API Reference
 
-<a name="topology" href="#topology">#</a> topojson.<b>topology</b>(<i>objects</i>[, <i>quantization</i>])
+<a name="topology" href="#topology">#</a> topojson.<b>topology</b>(<i>objects</i>[, <i>quantization</i>]) [<>](https://github.com/topojson/topojson-server/blob/master/src/topology.js "Source")
 
 Converts the specified [GeoJSON *objects*](http://geojson.org/geojson-spec.html#geojson-objects) to TopoJSON.
 
