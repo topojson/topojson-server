@@ -36,7 +36,7 @@ export default function(objects, bbox, n) {
     }
 
     output.length = j;
-    while (j < m) j = output.push(output[0].slice());
+    while (j < m) j = output.push([output[0][0], output[0][1]]);
     return output;
   }
 
