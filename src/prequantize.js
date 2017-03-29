@@ -7,10 +7,7 @@ export default function(objects, bbox, n) {
       ky = y1 - y0 ? (n - 1) / (y1 - y0) : 1;
 
   function quantizePoint(input) {
-    return [
-      Math.round((input[0] - x0) * kx),
-      Math.round((input[1] - y0) * ky)
-    ];
+    return [Math.round((input[0] - x0) * kx), Math.round((input[1] - y0) * ky)];
   }
 
   function quantizePoints(input, m) {
