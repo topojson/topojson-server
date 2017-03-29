@@ -14,25 +14,21 @@ export default function(objects, bbox, n) {
   }
 
   function quantizePoints(input, m) {
-    var i = 0,
-        j = 1,
+    var i = -1,
+        j = 0,
         n = input.length,
         output = new Array(n), // pessimistic
-        pi = output[0] = quantizePoint(input[0]),
-        px = pi[0],
-        py = pi[1],
+        pi,
+        px,
+        py,
         x,
         y;
 
     while (++i < n) {
-      pi = quantizePoint(input[i]);
-      x = pi[0];
-      y = pi[1];
-      if (x !== px || y !== py) { // skip coincident points
-        output[j++] = pi;
-        px = x;
-        py = y;
-      }
+      pi = input[i];
+      x = Math.round((pi[0] - x0) * kx);
+      y = Math.round((pi[1] - y0) * ky);
+      if (x !== px || y !== py) output[j++] = [px = x, py = y]; // non-coincident points
     }
 
     output.length = j;
