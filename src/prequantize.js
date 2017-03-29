@@ -13,7 +13,7 @@ export default function(objects, bbox, n) {
     ];
   }
 
-  function quantizeLine(input) {
+  function quantizePoints(input, m) {
     var i = 0,
         j = 1,
         n = input.length,
@@ -35,15 +35,17 @@ export default function(objects, bbox, n) {
       }
     }
 
-    if (j < 2) output[1] = output[0].slice(), j = 2; // must have 2+
     output.length = j;
+    while (j < m) j = output.push(output[0].slice());
     return output;
   }
 
+  function quantizeLine(input) {
+    return quantizePoints(input, 2);
+  }
+
   function quantizeRing(input) {
-    var output = quantizeLine(input);
-    while (output.length < 4) output.push(output[0].slice()); // must have 4+
-    return output;
+    return quantizePoints(input, 4);
   }
 
   function quantizePolygon(input) {
