@@ -6,79 +6,62 @@ export default function(objects, bbox, n) {
       kx = x1 - x0 ? (n - 1) / (x1 - x0) : 1,
       ky = y1 - y0 ? (n - 1) / (y1 - y0) : 1;
 
-  function quantizePoint(coordinates) {
-    coordinates[0] = Math.round((coordinates[0] - x0) * kx);
-    coordinates[1] = Math.round((coordinates[1] - y0) * ky);
-    return coordinates;
+  function quantizePoint(input) {
+    return [
+      Math.round((input[0] - x0) * kx),
+      Math.round((input[1] - y0) * ky)
+    ];
   }
 
-  function quantizeLine(coordinates) {
+  function quantizeLine(input) {
     var i = 0,
         j = 1,
-        n = coordinates.length,
-        pi = quantizePoint(coordinates[0]),
-        pj,
+        n = input.length,
+        output = new Array(n), // pessimistic
+        pi = output[0] = quantizePoint(input[0]),
         px = pi[0],
         py = pi[1],
         x,
         y;
 
     while (++i < n) {
-      pi = quantizePoint(coordinates[i]);
+      pi = quantizePoint(input[i]);
       x = pi[0];
       y = pi[1];
       if (x !== px || y !== py) { // skip coincident points
-        pj = coordinates[j++];
-        pj[0] = px = x;
-        pj[1] = py = y;
+        output[j++] = pi;
+        px = x;
+        py = y;
       }
     }
 
-    coordinates.length = j;
+    if (j < 2) output[1] = output[0].slice(), j = 2; // must have 2+
+    output.length = j;
+    return output;
+  }
+
+  function quantizeRing(input) {
+    var output = quantizeLine(input);
+    while (output.length < 4) output.push(output[0].slice()); // must have 4+
+    return output;
+  }
+
+  function quantizePolygon(input) {
+    return input.map(quantizeRing);
   }
 
   function quantizeGeometry(o) {
-    if (o && quantizeGeometryType.hasOwnProperty(o.type)) quantizeGeometryType[o.type](o);
+    if (o != null && quantizeGeometryType.hasOwnProperty(o.type)) quantizeGeometryType[o.type](o);
   }
 
   var quantizeGeometryType = {
-    GeometryCollection: function(o) {
-      o.geometries.forEach(quantizeGeometry);
-    },
-    Point: function(o) {
-      quantizePoint(o.coordinates);
-    },
-    MultiPoint: function(o) {
-      o.coordinates.forEach(quantizePoint);
-    },
-    LineString: function(o) {
-      var line = o.coordinates;
-      quantizeLine(line);
-      if (line.length < 2) line[1] = line[0]; // must have 2+
-    },
-    MultiLineString: function(o) {
-      for (var lines = o.coordinates, i = 0, n = lines.length; i < n; ++i) {
-        var line = lines[i];
-        quantizeLine(line);
-        if (line.length < 2) line[1] = line[0]; // must have 2+
-      }
-    },
-    Polygon: function(o) {
-      for (var rings = o.coordinates, i = 0, n = rings.length; i < n; ++i) {
-        var ring = rings[i];
-        quantizeLine(ring);
-        while (ring.length < 4) ring.push(ring[0]); // must have 4+
-      }
-    },
-    MultiPolygon: function(o) {
-      for (var polygons = o.coordinates, i = 0, n = polygons.length; i < n; ++i) {
-        for (var rings = polygons[i], j = 0, m = rings.length; j < m; ++j) {
-          var ring = rings[j];
-          quantizeLine(ring);
-          while (ring.length < 4) ring.push(ring[0]); // must have 4+
-        }
-      }
-    }
+    GeometryCollection: function(o) { o.geometries.forEach(quantizeGeometry); },
+    Point: function(o) { o.coordinates = quantizePoint(o.coordinates); },
+    MultiPoint: function(o) { o.coordinates = o.coordinates.map(quantizePoint); },
+    LineString: function(o) { o.coordinates = quantizeLine(o.coordinates); },
+    MultiLineString: function(o) { o.coordinates = o.coordinates.map(quantizeLine); },
+    Polygon: function(o) { o.coordinates = quantizePolygon(o.coordinates); },
+    MultiPolygon: function(o) { o.coordinates = o.coordinates.map(quantizePolygon); }
   };
 
   for (var key in objects) {

@@ -6,7 +6,7 @@ export default function(objects) {
       y1 = -Infinity;
 
   function boundGeometry(geometry) {
-    if (geometry && boundGeometryType.hasOwnProperty(geometry.type)) boundGeometryType[geometry.type](geometry);
+    if (geometry != null && boundGeometryType.hasOwnProperty(geometry.type)) boundGeometryType[geometry.type](geometry);
   }
 
   var boundGeometryType = {
