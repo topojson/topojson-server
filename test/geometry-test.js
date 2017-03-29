@@ -14,7 +14,7 @@ tape("geometry replaces LineString Feature with LineString Geometry", function(t
   }), {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
@@ -37,7 +37,7 @@ tape("geometry replaces GeometryCollection Feature with GeometryCollection", fun
       type: "GeometryCollection",
       geometries: [{
         type: "LineString",
-        coordinates: [[0, 0]]
+        arcs: [[0, 0]]
       }]
     }
   });
@@ -61,7 +61,7 @@ tape("geometry replaces FeatureCollection with GeometryCollection", function(tes
       type: "GeometryCollection",
       geometries: [{
         type: "LineString",
-        coordinates: [[0, 0]]
+        arcs: [[0, 0]]
       }]
     }
   });
@@ -124,7 +124,7 @@ tape("geometry preserves id", function(test) {
     foo: {
       id: "foo",
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
@@ -148,7 +148,7 @@ tape("geometry preserves properties", function(test) {
         "foo": 42
       },
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
@@ -185,7 +185,7 @@ tape("geometry does not delete empty properties", function(test) {
     foo: {
       properties: {},
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
@@ -230,7 +230,7 @@ tape("geometry does not convert singular multilines to lines", function(test) {
   }), {
     foo: {
       type: "MultiLineString",
-      coordinates: [[[0, 0], [0, 1]]]
+      arcs: [[[0, 0], [0, 1]]]
     }
   });
   test.end();
@@ -245,7 +245,7 @@ tape("geometry does not convert empty lines to null", function(test) {
   }), {
     foo: {
       type: "LineString",
-      coordinates: []
+      arcs: []
     }
   });
   test.end();
@@ -264,11 +264,11 @@ tape("geometry does not convert empty multilines to null", function(test) {
   }), {
     foo: {
       type: "MultiLineString",
-      coordinates: []
+      arcs: []
     },
     bar: {
       type: "MultiLineString",
-      coordinates: [[]]
+      arcs: [[]]
     }
   });
   test.end();
@@ -283,7 +283,7 @@ tape("geometry does not strip empty rings in polygons", function(test) {
   }), {
     foo: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]], []]
+      arcs: [[[0, 0], [1, 0], [1, 1], [0, 0]], []]
     }
   });
   test.end();
@@ -298,7 +298,7 @@ tape("geometry does not strip empty lines in multilines", function(test) {
   }), {
     foo: {
       type: "MultiLineString",
-      coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]], [], [[0, 0], [1, 0]]]
+      arcs: [[[0, 0], [1, 0], [1, 1], [0, 0]], [], [[0, 0], [1, 0]]]
     }
   });
   test.end();
@@ -317,11 +317,11 @@ tape("geometry does not convert empty polygons to null", function(test) {
   }), {
     foo: {
       type: "Polygon",
-      coordinates: []
+      arcs: []
     },
     bar: {
       type: "Polygon",
-      coordinates: [[]]
+      arcs: [[]]
     }
   });
   test.end();
@@ -336,7 +336,7 @@ tape("geometry does not strip empty polygons in multipolygons", function(test) {
   }), {
     foo: {
       type: "MultiPolygon",
-      coordinates: [[[[0, 0], [1, 0], [1, 1], [0, 0]], []], [], [[]]]
+      arcs: [[[[0, 0], [1, 0], [1, 1], [0, 0]], []], [], [[]]]
     }
   });
   test.end();
@@ -351,7 +351,7 @@ tape("geometry does not convert singular multipolygons to polygons", function(te
   }), {
     foo: {
       type: "MultiPolygon",
-      coordinates: [[[[0, 0], [0, 1], [1, 0], [0, 0]]]]
+      arcs: [[[[0, 0], [0, 1], [1, 0], [0, 0]]]]
     }
   });
   test.end();

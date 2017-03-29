@@ -14,11 +14,11 @@ tape("prequantize converts coordinates to fixed precision", function(test) {
   var objects = {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [0, 1], [0, 0]]
+      arcs: [[0, 0], [1, 0], [0, 1], [0, 0]]
     }
   };
   quantize(objects, [0, 0, 1, 1], 1e4);
-  test.deepEqual(objects.foo.coordinates, [[0, 0], [9999, 0], [0, 9999], [0, 0]]);
+  test.deepEqual(objects.foo.arcs, [[0, 0], [9999, 0], [0, 9999], [0, 0]]);
   test.end();
 });
 
@@ -26,11 +26,11 @@ tape("prequantize observes the quantization parameter", function(test) {
   var objects = {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [0, 1], [0, 0]]
+      arcs: [[0, 0], [1, 0], [0, 1], [0, 0]]
     }
   };
   quantize(objects, [0, 0, 1, 1], 10);
-  test.deepEqual(objects.foo.coordinates, [[0, 0], [9, 0], [0, 9], [0, 0]]);
+  test.deepEqual(objects.foo.arcs, [[0, 0], [9, 0], [0, 9], [0, 0]]);
   test.end();
 });
 
@@ -38,11 +38,11 @@ tape("prequantize observes the bounding box", function(test) {
   var objects = {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [0, 1], [0, 0]]
+      arcs: [[0, 0], [1, 0], [0, 1], [0, 0]]
     }
   };
   quantize(objects, [-1, -1, 2, 2], 10);
-  test.deepEqual(objects.foo.coordinates, [[3, 3], [6, 3], [3, 6], [3, 3]]);
+  test.deepEqual(objects.foo.arcs, [[3, 3], [6, 3], [3, 6], [3, 3]]);
   test.end();
 });
 
@@ -62,11 +62,11 @@ tape("prequantize skips coincident points in lines", function(test) {
   var objects = {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [0.9, 0.9], [1.1, 1.1], [2, 2]]
+      arcs: [[0, 0], [0.9, 0.9], [1.1, 1.1], [2, 2]]
     }
   };
   quantize(objects, [0, 0, 2, 2], 3);
-  test.deepEqual(objects.foo.coordinates, [[0, 0], [1, 1], [2, 2]]);
+  test.deepEqual(objects.foo.arcs, [[0, 0], [1, 1], [2, 2]]);
   test.end();
 });
 
@@ -74,11 +74,11 @@ tape("prequantize skips coincident points in polygons", function(test) {
   var objects = {
     foo: {
       type: "Polygon",
-      coordinates: [[[0, 0], [0.9, 0.9], [1.1, 1.1], [2, 2], [0, 0]]]
+      arcs: [[[0, 0], [0.9, 0.9], [1.1, 1.1], [2, 2], [0, 0]]]
     }
   };
   quantize(objects, [0, 0, 2, 2], 3);
-  test.deepEqual(objects.foo.coordinates, [[[0, 0], [1, 1], [2, 2], [0, 0]]]);
+  test.deepEqual(objects.foo.arcs, [[[0, 0], [1, 1], [2, 2], [0, 0]]]);
   test.end();
 });
 
@@ -98,11 +98,11 @@ tape("prequantize includes closing point in degenerate lines", function(test) {
   var objects = {
     foo: {
       type: "LineString",
-      coordinates: [[1, 1], [1, 1], [1, 1]]
+      arcs: [[1, 1], [1, 1], [1, 1]]
     }
   };
   quantize(objects, [0, 0, 2, 2], 3);
-  test.deepEqual(objects.foo.coordinates, [[1, 1], [1, 1]]);
+  test.deepEqual(objects.foo.arcs, [[1, 1], [1, 1]]);
   test.end();
 });
 
@@ -110,10 +110,10 @@ tape("prequantize includes closing point in degenerate polygons", function(test)
   var objects = {
     foo: {
       type: "Polygon",
-      coordinates: [[[0.9, 1], [1.1, 1], [1.01, 1], [0.9, 1]]]
+      arcs: [[[0.9, 1], [1.1, 1], [1.01, 1], [0.9, 1]]]
     }
   };
   quantize(objects, [0, 0, 2, 2], 3);
-  test.deepEqual(objects.foo.coordinates, [[[1, 1], [1, 1], [1, 1], [1, 1]]]);
+  test.deepEqual(objects.foo.arcs, [[[1, 1], [1, 1], [1, 1], [1, 1]]]);
   test.end();
 });

@@ -53,10 +53,10 @@ export default function(objects, bbox, n) {
     GeometryCollection: function(o) { o.geometries.forEach(quantizeGeometry); },
     Point: function(o) { o.coordinates = quantizePoint(o.coordinates); },
     MultiPoint: function(o) { o.coordinates = o.coordinates.map(quantizePoint); },
-    LineString: function(o) { o.coordinates = quantizeLine(o.coordinates); },
-    MultiLineString: function(o) { o.coordinates = o.coordinates.map(quantizeLine); },
-    Polygon: function(o) { o.coordinates = quantizePolygon(o.coordinates); },
-    MultiPolygon: function(o) { o.coordinates = o.coordinates.map(quantizePolygon); }
+    LineString: function(o) { o.arcs = quantizeLine(o.arcs); },
+    MultiLineString: function(o) { o.arcs = o.arcs.map(quantizeLine); },
+    Polygon: function(o) { o.arcs = quantizePolygon(o.arcs); },
+    MultiPolygon: function(o) { o.arcs = o.arcs.map(quantizePolygon); }
   };
 
   for (var key in objects) {

@@ -6,11 +6,11 @@ tape("extract copies coordinates sequentially into a buffer", function(test) {
   var topology = extract({
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     },
     bar: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     }
   });
   test.deepEqual(topology.coordinates, [[0, 0], [1, 0], [2, 0], [0, 0], [1, 0], [2, 0]]);
@@ -21,16 +21,16 @@ tape("extract does not copy point geometries into the coordinate buffer", functi
   var topology = extract({
     foo: {
       type: "Point",
-      coordinates: [0, 0]
+      arcs: [0, 0]
     },
     bar: {
       type: "MultiPoint",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     }
   });
   test.deepEqual(topology.coordinates, []);
-  test.deepEqual(topology.objects.foo.coordinates, [0, 0]);
-  test.deepEqual(topology.objects.bar.coordinates, [[0, 0], [1, 0], [2, 0]]);
+  test.deepEqual(topology.objects.foo.arcs, [0, 0]);
+  test.deepEqual(topology.objects.bar.arcs, [[0, 0], [1, 0], [2, 0]]);
   test.end();
 });
 
@@ -38,7 +38,7 @@ tape("extract includes closing coordinates in polygons", function(test) {
   var topology = extract({
     foo: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+      arcs: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
     }
   });
   test.deepEqual(topology.coordinates, [[0, 0], [1, 0], [2, 0], [0, 0]]);
@@ -49,11 +49,11 @@ tape("extract represents lines as contiguous slices of the coordinate buffer", f
   var topology = extract({
     foo: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     },
     bar: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     }
   });
   test.deepEqual(topology.objects, {
@@ -73,11 +73,11 @@ tape("extract represents rings as contiguous slices of the coordinate buffer", f
   var topology = extract({
     foo: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+      arcs: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
     },
     bar: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+      arcs: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
     }
   });
   test.deepEqual(topology.objects, {
@@ -97,15 +97,15 @@ tape("extract exposes the constructed lines and rings in the order of constructi
   var topology = extract({
     line: {
       type: "LineString",
-      coordinates: [[0, 0], [1, 0], [2, 0]]
+      arcs: [[0, 0], [1, 0], [2, 0]]
     },
     multiline: {
       type: "MultiLineString",
-      coordinates: [[[0, 0], [1, 0], [2, 0]]]
+      arcs: [[[0, 0], [1, 0], [2, 0]]]
     },
     polygon: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+      arcs: [[[0, 0], [1, 0], [2, 0], [0, 0]]]
     }
   });
   test.deepEqual(topology.lines, [
@@ -126,7 +126,7 @@ tape("extract supports nested geometry collections", function(test) {
         type: "GeometryCollection",
         geometries: [{
           type: "LineString",
-          coordinates: [[0, 0], [0, 1]]
+          arcs: [[0, 0], [0, 1]]
         }]
       }]
     }

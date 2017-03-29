@@ -31,9 +31,9 @@ function geomifyFeature(input) {
 
 function geomifyGeometry(input) {
   if (input == null) return {type: null};
-  var output = input.type === "GeometryCollection"
-      ? {type: "GeometryCollection", geometries: input.geometries.map(geomifyGeometry)}
-      : {type: input.type, coordinates: input.coordinates};
+  var output = input.type === "GeometryCollection" ? {type: "GeometryCollection", geometries: input.geometries.map(geomifyGeometry)}
+      : input.type === "Point" || input.type === "MultiPoint" ? {type: input.type, coordinates: input.coordinates}
+      : {type: input.type, arcs: input.coordinates}; // TODO Check for unknown types?
   if (input.bbox != null) output.bbox = input.bbox;
   return output;
 }
