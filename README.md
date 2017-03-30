@@ -9,7 +9,7 @@ See [shapefile](https://github.com/mbostock/shapefile) for converting ESRI shape
 If you use NPM, `npm install topojson-server`. Otherwise, download the [latest release](https://github.com/topojson/topojson-server/releases/latest). You can also load directly from [unpkg](https://unpkg.com). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `topojson` global is exported:
 
 ```html
-<script src="https://unpkg.com/topojson-server@2"></script>
+<script src="https://unpkg.com/topojson-server@3"></script>
 <script>
 
 var topology = topojson.topology({foo: geojson});
