@@ -22,10 +22,10 @@ function geomifyFeatureCollection(input) {
 }
 
 function geomifyFeature(input) {
-  var output = geomifyGeometry(input.geometry);
+  var output = geomifyGeometry(input.geometry), key; // eslint-disable-line no-unused-vars
   if (input.id != null) output.id = input.id;
   if (input.bbox != null) output.bbox = input.bbox;
-  if (input.properties != null) output.properties = input.properties;
+  for (key in input.properties) { output.properties = input.properties; break; }
   return output;
 }
 

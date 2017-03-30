@@ -130,7 +130,7 @@ tape("geometry preserves id", function(test) {
   test.end();
 });
 
-tape("geometry preserves properties", function(test) {
+tape("geometry preserves properties if non-empty", function(test) {
   test.deepEqual(geometry({
     foo: {
       properties: {
@@ -171,7 +171,7 @@ tape("geometry applies a shallow copy for properties", function(test) {
   test.end();
 });
 
-tape("geometry does not delete empty properties", function(test) {
+tape("geometry deletes empty properties", function(test) {
   test.deepEqual(geometry({
     foo: {
       properties: {},
@@ -183,7 +183,6 @@ tape("geometry does not delete empty properties", function(test) {
     }
   }), {
     foo: {
-      properties: {},
       type: "LineString",
       arcs: [[0, 0]]
     }

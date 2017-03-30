@@ -877,7 +877,7 @@ tape("topology converting a feature to a geometry preserves its bbox", function(
   test.end();
 });
 
-tape("topology converting a feature to a geometry preserves its properties", function(test) {
+tape("topology converting a feature to a geometry preserves its properties, but only if non-empty", function(test) {
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George"});
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "GeometryCollection", geometries: [{type: "LineString", coordinates: [[.1, .2], [.3, .4]]}]}}});
@@ -885,7 +885,7 @@ tape("topology converting a feature to a geometry preserves its properties", fun
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George", demeanor: "curious"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George", demeanor: "curious"});
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
-  test.deepEqual(topology.objects.foo.properties, {});
+  test.equal(topology.objects.foo.properties, undefined);
   test.end();
 });
 
