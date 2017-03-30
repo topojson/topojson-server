@@ -58,7 +58,7 @@ export default function(objects, quantization) {
 
   if (transform) {
     topology.transform = transform;
-    delta(topology);
+    topology.arcs = delta(topology.arcs);
   }
 
   return topology;

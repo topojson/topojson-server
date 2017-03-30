@@ -999,7 +999,7 @@ tape("topology collapsed polygons are preserved", function(test) {
   }, 3);
   test.deepEqual(topology.objects.foo, {type: "Polygon", arcs: [[0]]});
   test.deepEqual(topology.objects.bar, {type: "Polygon", arcs: [[0]]});
-  test.deepEqual(topology.arcs[0], [[1, 1], [0, 0], [0, 0], [0, 0]]);
+  test.deepEqual(topology.arcs[0], [[1, 1], [0, 0]]);
   test.end();
 });
 
