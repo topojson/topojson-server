@@ -1,6 +1,6 @@
 {
   "name": "topojson-server",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Convert GeoJSON to TopoJSON for smaller files and the power of topology!",
   "keywords": [
     "topojson",
@@ -35,7 +35,7 @@
     "package-preamble": "0.0",
     "rollup": "0.41",
     "tape": "4",
-    "topojson-client": "2",
+    "topojson-client": "3",
     "uglify-js": "2"
   }
 }
