@@ -6,17 +6,17 @@ export default function(objects) {
       y1 = -Infinity;
 
   function boundGeometry(geometry) {
-    if (geometry && boundGeometryType.hasOwnProperty(geometry.type)) boundGeometryType[geometry.type](geometry);
+    if (geometry != null && boundGeometryType.hasOwnProperty(geometry.type)) boundGeometryType[geometry.type](geometry);
   }
 
   var boundGeometryType = {
     GeometryCollection: function(o) { o.geometries.forEach(boundGeometry); },
     Point: function(o) { boundPoint(o.coordinates); },
     MultiPoint: function(o) { o.coordinates.forEach(boundPoint); },
-    LineString: function(o) { boundLine(o.coordinates); },
-    MultiLineString: function(o) { o.coordinates.forEach(boundLine); },
-    Polygon: function(o) { o.coordinates.forEach(boundLine); },
-    MultiPolygon: function(o) { o.coordinates.forEach(boundMultiLine); }
+    LineString: function(o) { boundLine(o.arcs); },
+    MultiLineString: function(o) { o.arcs.forEach(boundLine); },
+    Polygon: function(o) { o.arcs.forEach(boundLine); },
+    MultiPolygon: function(o) { o.arcs.forEach(boundMultiLine); }
   };
 
   function boundPoint(coordinates) {

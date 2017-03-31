@@ -1,115 +1,39 @@
-// Given a hash of GeoJSON objects, replaces Features with geometry objects.
-// This is a destructive operation that modifies the input objects!
-export default function(objects) {
-  var key;
-  for (key in objects) objects[key] = geomifyObject(objects[key]);
-  return objects;
+// Given a hash of GeoJSON objects, returns a hash of GeoJSON geometry objects.
+// Any null input geometry objects are represented as {type: null} in the output.
+// Any feature.{id,properties,bbox} are transferred to the output geometry object.
+// Each output geometry object is a shallow copy of the input (e.g., properties, coordinates)!
+export default function(inputs) {
+  var outputs = {}, key;
+  for (key in inputs) outputs[key] = geomifyObject(inputs[key]);
+  return outputs;
 }
 
-function geomifyObject(object) {
-  return (object && geomifyObjectType.hasOwnProperty(object.type)
-      ? geomifyObjectType[object.type]
-      : geomifyGeometry)(object);
+function geomifyObject(input) {
+  return input == null ? {type: null}
+      : (input.type === "FeatureCollection" ? geomifyFeatureCollection
+      : input.type === "Feature" ? geomifyFeature
+      : geomifyGeometry)(input);
 }
 
-function geomifyFeature(feature) {
-  var geometry = feature.geometry;
-  if (geometry == null) {
-    feature.type = null;
-  } else {
-    geomifyGeometry(geometry);
-    feature.type = geometry.type;
-    if (geometry.geometries) feature.geometries = geometry.geometries;
-    else if (geometry.coordinates) feature.coordinates = geometry.coordinates;
-    if (geometry.bbox) feature.bbox = geometry.bbox;
-  }
-  delete feature.geometry;
-  return feature;
+function geomifyFeatureCollection(input) {
+  var output = {type: "GeometryCollection", geometries: input.features.map(geomifyFeature)};
+  if (input.bbox != null) output.bbox = input.bbox;
+  return output;
 }
 
-function geomifyGeometry(geometry) {
-  if (!geometry) return {type: null};
-  if (geomifyGeometryType.hasOwnProperty(geometry.type)) geomifyGeometryType[geometry.type](geometry);
-  return geometry;
+function geomifyFeature(input) {
+  var output = geomifyGeometry(input.geometry), key; // eslint-disable-line no-unused-vars
+  if (input.id != null) output.id = input.id;
+  if (input.bbox != null) output.bbox = input.bbox;
+  for (key in input.properties) { output.properties = input.properties; break; }
+  return output;
 }
 
-var geomifyObjectType = {
-  Feature: geomifyFeature,
-  FeatureCollection: function(collection) {
-    collection.type = "GeometryCollection";
-    collection.geometries = collection.features;
-    collection.features.forEach(geomifyFeature);
-    delete collection.features;
-    return collection;
-  }
-};
-
-var geomifyGeometryType = {
-  GeometryCollection: function(o) {
-    var geometries = o.geometries, i = -1, n = geometries.length;
-    while (++i < n) geometries[i] = geomifyGeometry(geometries[i]);
-  },
-  MultiPoint: function(o) {
-    if (!o.coordinates.length) {
-      o.type = null;
-      delete o.coordinates;
-    } else if (o.coordinates.length < 2) {
-      o.type = "Point";
-      o.coordinates = o.coordinates[0];
-    }
-  },
-  LineString: function(o) {
-    if (!o.coordinates.length) {
-      o.type = null;
-      delete o.coordinates;
-    }
-  },
-  MultiLineString: function(o) {
-    for (var lines = o.coordinates, i = 0, N = 0, n = lines.length; i < n; ++i) {
-      var line = lines[i];
-      if (line.length) lines[N++] = line;
-    }
-    if (!N) {
-      o.type = null;
-      delete o.coordinates;
-    } else if (N < 2) {
-      o.type = "LineString";
-      o.coordinates = lines[0];
-    } else {
-      o.coordinates.length = N;
-    }
-  },
-  Polygon: function(o) {
-    for (var rings = o.coordinates, i = 0, N = 0, n = rings.length; i < n; ++i) {
-      var ring = rings[i];
-      if (ring.length) rings[N++] = ring;
-    }
-    if (!N) {
-      o.type = null;
-      delete o.coordinates;
-    } else {
-      o.coordinates.length = N;
-    }
-  },
-  MultiPolygon: function(o) {
-    for (var polygons = o.coordinates, j = 0, M = 0, m = polygons.length; j < m; ++j) {
-      for (var rings = polygons[j], i = 0, N = 0, n = rings.length; i < n; ++i) {
-        var ring = rings[i];
-        if (ring.length) rings[N++] = ring;
-      }
-      if (N) {
-        rings.length = N;
-        polygons[M++] = rings;
-      }
-    }
-    if (!M) {
-      o.type = null;
-      delete o.coordinates;
-    } else if (M < 2) {
-      o.type = "Polygon";
-      o.coordinates = polygons[0];
-    } else {
-      polygons.length = M;
-    }
-  }
-};
+function geomifyGeometry(input) {
+  if (input == null) return {type: null};
+  var output = input.type === "GeometryCollection" ? {type: "GeometryCollection", geometries: input.geometries.map(geomifyGeometry)}
+      : input.type === "Point" || input.type === "MultiPoint" ? {type: input.type, coordinates: input.coordinates}
+      : {type: input.type, arcs: input.coordinates}; // TODO Check for unknown types?
+  if (input.bbox != null) output.bbox = input.bbox;
+  return output;
+}

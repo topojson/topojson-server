@@ -11,7 +11,7 @@ import prequantize from "./prequantize";
 // Each object in the specified hash must be a GeoJSON object,
 // meaning FeatureCollection, a Feature or a geometry object.
 export default function(objects, quantization) {
-  var bbox = bounds(geometry(objects)),
+  var bbox = bounds(objects = geometry(objects)),
       transform = quantization > 0 && bbox && prequantize(objects, bbox, quantization),
       topology = dedup(cut(extract(objects))),
       coordinates = topology.coordinates,
@@ -58,7 +58,7 @@ export default function(objects, quantization) {
 
   if (transform) {
     topology.transform = transform;
-    delta(topology);
+    topology.arcs = delta(topology.arcs);
   }
 
   return topology;

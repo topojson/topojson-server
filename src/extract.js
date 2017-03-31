@@ -27,10 +27,10 @@ export default function(objects) {
 
   var extractGeometryType = {
     GeometryCollection: function(o) { o.geometries.forEach(extractGeometry); },
-    LineString: function(o) { o.arcs = extractLine(o.coordinates); delete o.coordinates; },
-    MultiLineString: function(o) { o.arcs = o.coordinates.map(extractLine); delete o.coordinates; },
-    Polygon: function(o) { o.arcs = o.coordinates.map(extractRing); delete o.coordinates; },
-    MultiPolygon: function(o) { o.arcs = o.coordinates.map(extractMultiRing); delete o.coordinates; }
+    LineString: function(o) { o.arcs = extractLine(o.arcs); },
+    MultiLineString: function(o) { o.arcs = o.arcs.map(extractLine); },
+    Polygon: function(o) { o.arcs = o.arcs.map(extractRing); },
+    MultiPolygon: function(o) { o.arcs = o.arcs.map(extractMultiRing); }
   };
 
   function extractLine(line) {

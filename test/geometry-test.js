@@ -14,7 +14,7 @@ tape("geometry replaces LineString Feature with LineString Geometry", function(t
   }), {
     foo: {
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
@@ -37,7 +37,7 @@ tape("geometry replaces GeometryCollection Feature with GeometryCollection", fun
       type: "GeometryCollection",
       geometries: [{
         type: "LineString",
-        coordinates: [[0, 0]]
+        arcs: [[0, 0]]
       }]
     }
   });
@@ -61,7 +61,7 @@ tape("geometry replaces FeatureCollection with GeometryCollection", function(tes
       type: "GeometryCollection",
       geometries: [{
         type: "LineString",
-        coordinates: [[0, 0]]
+        arcs: [[0, 0]]
       }]
     }
   });
@@ -124,13 +124,13 @@ tape("geometry preserves id", function(test) {
     foo: {
       id: "foo",
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
 });
 
-tape("geometry preserves properties", function(test) {
+tape("geometry preserves properties if non-empty", function(test) {
   test.deepEqual(geometry({
     foo: {
       properties: {
@@ -148,13 +148,30 @@ tape("geometry preserves properties", function(test) {
         "foo": 42
       },
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
 });
 
-tape("geometry does not delete empty properties", function(test) {
+tape("geometry applies a shallow copy for properties", function(test) {
+  var input = {
+    foo: {
+      properties: {
+        "foo": 42
+      },
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: [[0, 0]]
+      }
+    }
+  }, output = geometry(input);
+  test.strictEqual(input.foo.properties, output.foo.properties);
+  test.end();
+});
+
+tape("geometry deletes empty properties", function(test) {
   test.deepEqual(geometry({
     foo: {
       properties: {},
@@ -166,15 +183,14 @@ tape("geometry does not delete empty properties", function(test) {
     }
   }), {
     foo: {
-      properties: {},
       type: "LineString",
-      coordinates: [[0, 0]]
+      arcs: [[0, 0]]
     }
   });
   test.end();
 });
 
-tape("geometry converts singular multipoints to points", function(test) {
+tape("geometry does not convert singular multipoints to points", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiPoint",
@@ -182,14 +198,14 @@ tape("geometry converts singular multipoints to points", function(test) {
     }
   }), {
     foo: {
-      type: "Point",
-      coordinates: [0, 0]
+      type: "MultiPoint",
+      coordinates: [[0, 0]]
     }
   });
   test.end();
 });
 
-tape("geometry converts empty multipoints to null", function(test) {
+tape("geometry does not convert empty multipoints to null", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiPoint",
@@ -197,13 +213,14 @@ tape("geometry converts empty multipoints to null", function(test) {
     }
   }), {
     foo: {
-      type: null
+      type: "MultiPoint",
+      coordinates: []
     }
   });
   test.end();
 });
 
-tape("geometry converts singular multilines to lines", function(test) {
+tape("geometry does not convert singular multilines to lines", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiLineString",
@@ -211,14 +228,14 @@ tape("geometry converts singular multilines to lines", function(test) {
     }
   }), {
     foo: {
-      type: "LineString",
-      coordinates: [[0, 0], [0, 1]]
+      type: "MultiLineString",
+      arcs: [[[0, 0], [0, 1]]]
     }
   });
   test.end();
 });
 
-tape("geometry converts empty lines to null", function(test) {
+tape("geometry does not convert empty lines to null", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "LineString",
@@ -226,13 +243,14 @@ tape("geometry converts empty lines to null", function(test) {
     }
   }), {
     foo: {
-      type: null
+      type: "LineString",
+      arcs: []
     }
   });
   test.end();
 });
 
-tape("geometry converts empty multilines to null", function(test) {
+tape("geometry does not convert empty multilines to null", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiLineString",
@@ -244,16 +262,18 @@ tape("geometry converts empty multilines to null", function(test) {
     }
   }), {
     foo: {
-      type: null
+      type: "MultiLineString",
+      arcs: []
     },
     bar: {
-      type: null
+      type: "MultiLineString",
+      arcs: [[]]
     }
   });
   test.end();
 });
 
-tape("geometry strips empty rings in polygons", function(test) {
+tape("geometry does not strip empty rings in polygons", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "Polygon",
@@ -262,13 +282,13 @@ tape("geometry strips empty rings in polygons", function(test) {
   }), {
     foo: {
       type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]]
+      arcs: [[[0, 0], [1, 0], [1, 1], [0, 0]], []]
     }
   });
   test.end();
 });
 
-tape("geometry strips empty lines in multilines", function(test) {
+tape("geometry does not strip empty lines in multilines", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiLineString",
@@ -277,13 +297,13 @@ tape("geometry strips empty lines in multilines", function(test) {
   }), {
     foo: {
       type: "MultiLineString",
-      coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]], [[0, 0], [1, 0]]]
+      arcs: [[[0, 0], [1, 0], [1, 1], [0, 0]], [], [[0, 0], [1, 0]]]
     }
   });
   test.end();
 });
 
-tape("geometry converts empty polygons to null", function(test) {
+tape("geometry does not convert empty polygons to null", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "Polygon",
@@ -295,16 +315,18 @@ tape("geometry converts empty polygons to null", function(test) {
     }
   }), {
     foo: {
-      type: null
+      type: "Polygon",
+      arcs: []
     },
     bar: {
-      type: null
+      type: "Polygon",
+      arcs: [[]]
     }
   });
   test.end();
 });
 
-tape("geometry strips empty polygons in multipolygons", function(test) {
+tape("geometry does not strip empty polygons in multipolygons", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiPolygon",
@@ -312,14 +334,14 @@ tape("geometry strips empty polygons in multipolygons", function(test) {
     }
   }), {
     foo: {
-      type: "Polygon",
-      coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]]
+      type: "MultiPolygon",
+      arcs: [[[[0, 0], [1, 0], [1, 1], [0, 0]], []], [], [[]]]
     }
   });
   test.end();
 });
 
-tape("geometry converts singular multipolygons to polygons", function(test) {
+tape("geometry does not convert singular multipolygons to polygons", function(test) {
   test.deepEqual(geometry({
     foo: {
       type: "MultiPolygon",
@@ -327,8 +349,8 @@ tape("geometry converts singular multipolygons to polygons", function(test) {
     }
   }), {
     foo: {
-      type: "Polygon",
-      coordinates: [[[0, 0], [0, 1], [1, 0], [0, 0]]]
+      type: "MultiPolygon",
+      arcs: [[[[0, 0], [0, 1], [1, 0], [0, 0]]]]
     }
   });
   test.end();

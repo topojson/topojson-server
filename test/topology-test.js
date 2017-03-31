@@ -877,7 +877,7 @@ tape("topology converting a feature to a geometry preserves its bbox", function(
   test.end();
 });
 
-tape("topology converting a feature to a geometry preserves its properties", function(test) {
+tape("topology converting a feature to a geometry preserves its properties, but only if non-empty", function(test) {
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George"});
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "GeometryCollection", geometries: [{type: "LineString", coordinates: [[.1, .2], [.3, .4]]}]}}});
@@ -885,7 +885,7 @@ tape("topology converting a feature to a geometry preserves its properties", fun
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George", demeanor: "curious"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George", demeanor: "curious"});
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
-  test.deepEqual(topology.objects.foo.properties, {});
+  test.equal(topology.objects.foo.properties, undefined);
   test.end();
 });
 
@@ -999,7 +999,7 @@ tape("topology collapsed polygons are preserved", function(test) {
   }, 3);
   test.deepEqual(topology.objects.foo, {type: "Polygon", arcs: [[0]]});
   test.deepEqual(topology.objects.bar, {type: "Polygon", arcs: [[0]]});
-  test.deepEqual(topology.arcs[0], [[1, 1], [0, 0], [0, 0], [0, 0]]);
+  test.deepEqual(topology.arcs[0], [[1, 1], [0, 0]]);
   test.end();
 });
 
@@ -1018,7 +1018,7 @@ tape("topology collapsed polygons in a MultiPolygon are preserved", function(tes
 tape("topology collapsed geometries in a GeometryCollection are preserved", function(test) {
   var topology = topojson.topology({collection: {type: "FeatureCollection", features: [{type: "Feature", geometry: {type: "MultiPolygon", coordinates: []}}]}}, 2);
   test.equal(topology.arcs.length, 0);
-  test.deepEqual(topology.objects.collection, {type: "GeometryCollection", geometries: [{type: null}]});
+  test.deepEqual(topology.objects.collection, {type: "GeometryCollection", geometries: [{type: "MultiPolygon", arcs: []}]});
   test.end();
 });
 
@@ -1027,7 +1027,7 @@ tape("topology collapsed geometries in a GeometryCollection are preserved", func
 tape("topology empty geometries are not removed", function(test) {
   var topology = topojson.topology({foo: {type: "MultiPolygon", coordinates: []}}, 2);
   test.equal(topology.arcs.length, 0);
-  test.deepEqual(topology.objects.foo, {type: null});
+  test.deepEqual(topology.objects.foo, {type: "MultiPolygon", arcs: []});
   test.end();
 });
 
@@ -1037,8 +1037,8 @@ tape("topology empty polygons are not removed", function(test) {
     bar: {type: "Polygon", coordinates: []}
   });
   test.equal(topology.arcs.length, 0);
-  test.deepEqual(topology.objects.foo, {type: "GeometryCollection", geometries: [{type: null}]});
-  test.deepEqual(topology.objects.bar, {type: null});
+  test.deepEqual(topology.objects.foo, {type: "GeometryCollection", geometries: [{type: "MultiPolygon", arcs: [[]]}]});
+  test.deepEqual(topology.objects.bar, {type: "Polygon", arcs: []});
   test.end();
 });
 
