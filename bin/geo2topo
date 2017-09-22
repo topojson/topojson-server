@@ -13,7 +13,7 @@ commander
     .option("-o, --out <file>", "output file name; defaults to “-” for stdout", "-")
     .option("-n, --newline-delimited", "accept newline-delimited JSON")
     .option("-q, --quantization <count>", "pre-quantization parameter; 0 disables quantization", 0)
-    .option("-l, --split-layers", "accept newline-delimited JSON")
+    .option("-l, --split-layers", "Split GeoJSON features into TopoJSON layers based on feature.properties.layer")
     .parse(process.argv);
 
 if (commander.args.length < 1) commander.args[0] = "-";
