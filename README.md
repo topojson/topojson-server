@@ -62,26 +62,14 @@ Output the version number.
 <a name="geo2topo_newline_delimited" href="#geo2topo_newline_delimited">#</a> geo2topo <b>-n</b>
 <br><a href="#geo2topo_newline_delimited">#</a> geo2topo <b>--newline-delimited</b>
 
-Output [newline-delimited JSON](http://ndjson.org/), with one feature per line.
+Accept [newline-delimited JSON](http://ndjson.org/), with one feature per line.
 
-<a name="geo2topo_in" href="#geo2topo_in">#</a> geo2topo <b>-i</b> <i>file</i>
-<br><a href="#geo2topo_in">#</a> geo2topo <b>--in</b> <i>file</i>
+<a name="geo2topo_out" href="#geo2topo_out">#</a> geo2topo <b>-o</b> <i>file</i>
+<br><a href="#geo2topo_out">#</a> geo2topo <b>--out</b> <i>file</i>
 
-Specify the input TopoJSON file name. Defaults to “-” for stdin.
+Specify the output TopoJSON file name. Defaults to “-” for stdout.
 
-<a name="geo2topo_list" href="#geo2topo_list">#</a> geo2topo <b>-l</b>
-<br><a href="#geo2topo_list">#</a> geo2topo <b>--list</b>
+<a name="geo2topo_quantization" href="#geo2topo_quantization">#</a> geo2topo <b>-q</b> <i>count</i>
+<br><a href="#geo2topo_quantization">#</a> geo2topo <b>--quantization</b> <i>count</i>
 
-List the names of the objects in the input topology, and then exit. For example, this:
-
-```
-geo2topo -l < us.json
-```
-
-Will output this:
-
-```
-counties
-states
-nation
-```
+Specify a pre-quantization paramter. 0 disables quantization. See <a href="#topology">topojson.topology</a> for a description of quantization.
