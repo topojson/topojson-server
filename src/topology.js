@@ -1,11 +1,12 @@
-import bounds from "./bounds";
-import cut from "./cut";
-import dedup from "./dedup";
-import delta from "./delta";
-import extract from "./extract";
-import geometry from "./geometry";
-import hashmap from "./hash/hashmap";
-import prequantize from "./prequantize";
+import bounds from "./bounds.js";
+import cut from "./cut.js";
+import dedup from "./dedup.js";
+import delta from "./delta.js";
+import extract from "./extract.js";
+import geometry from "./geometry.js";
+import hashmap from "./hash/hashmap.js";
+import {hasOwnProperty} from "./object.js";
+import prequantize from "./prequantize.js";
 
 // Constructs the TopoJSON Topology for the specified hash of features.
 // Each object in the specified hash must be a GeoJSON object,
@@ -28,7 +29,7 @@ export default function(objects, quantization) {
   coordinates = null;
 
   function indexGeometry(geometry) {
-    if (geometry && indexGeometryType.hasOwnProperty(geometry.type)) indexGeometryType[geometry.type](geometry);
+    if (geometry && hasOwnProperty.call(indexGeometryType, geometry.type)) indexGeometryType[geometry.type](geometry);
   }
 
   var indexGeometryType = {

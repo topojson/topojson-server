@@ -1,4 +1,4 @@
-import join from "./join";
+import join from "./join.js";
 
 // Given an extracted (pre-)topology, cuts (or rotates) arcs so that all shared
 // point sequences are identified. The topology can then be subsequently deduped

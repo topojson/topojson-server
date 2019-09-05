@@ -1,3 +1,5 @@
+import {hasOwnProperty} from "./object.js";
+
 // Computes the bounding box of the specified hash of GeoJSON objects.
 export default function(objects) {
   var x0 = Infinity,
@@ -6,7 +8,7 @@ export default function(objects) {
       y1 = -Infinity;
 
   function boundGeometry(geometry) {
-    if (geometry != null && boundGeometryType.hasOwnProperty(geometry.type)) boundGeometryType[geometry.type](geometry);
+    if (geometry != null && hasOwnProperty.call(boundGeometryType, geometry.type)) boundGeometryType[geometry.type](geometry);
   }
 
   var boundGeometryType = {

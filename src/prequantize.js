@@ -1,3 +1,5 @@
+import {hasOwnProperty} from "./object.js";
+
 export default function(objects, bbox, n) {
   var x0 = bbox[0],
       y0 = bbox[1],
@@ -46,7 +48,7 @@ export default function(objects, bbox, n) {
   }
 
   function quantizeGeometry(o) {
-    if (o != null && quantizeGeometryType.hasOwnProperty(o.type)) quantizeGeometryType[o.type](o);
+    if (o != null && hasOwnProperty.call(quantizeGeometryType, o.type)) quantizeGeometryType[o.type](o);
   }
 
   var quantizeGeometryType = {

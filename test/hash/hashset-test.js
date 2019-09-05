@@ -41,7 +41,7 @@ tape("hashset add throws an error when full", function(test) {
   var map = hashset(0, hash, equals), // minimum size of 16
       keys = [];
   for (var i = 0; i < 16; ++i) map.add(keys[i] = {hash: i});
-  for (var i = 0; i < 16; ++i) map.add(keys[i]); // replacing is okay
+  for (var j = 0; j < 16; ++j) map.add(keys[j]); // replacing is okay
   test.throws(function() { map.add({hash: 16}); }, /Error/);
   test.end();
 });

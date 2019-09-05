@@ -1,6 +1,6 @@
-import hashmap from "./hash/hashmap";
-import equalPoint from "./hash/point-equal";
-import hashPoint from "./hash/point-hash";
+import hashmap from "./hash/hashmap.js";
+import equalPoint from "./hash/point-equal.js";
+import hashPoint from "./hash/point-hash.js";
 
 // Given a cut topology, combines duplicate arcs.
 export default function(topology) {

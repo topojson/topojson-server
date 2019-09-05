@@ -7,13 +7,15 @@
     "geojson"
   ],
   "homepage": "https://github.com/topojson/topojson-server",
-  "license": "BSD-3-Clause",
+  "license": "ISC",
   "author": {
     "name": "Mike Bostock",
     "url": "https://bost.ocks.org/mike"
   },
   "main": "dist/topojson-server.js",
-  "module": "index",
+  "unpkg": "dist/topojson-server.min.js",
+  "jsdelivr": "dist/topojson-server.min.js",
+  "module": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/topojson/topojson-server.git"
@@ -21,21 +23,25 @@
   "bin": {
     "geo2topo": "bin/geo2topo"
   },
+  "files": [
+    "bin/geo*",
+    "dist/**/*.js",
+    "src/**/*.js"
+  ],
   "scripts": {
-    "pretest": "rm -rf dist && mkdir dist && rollup --banner \"$(preamble)\" -f umd -n topojson -o dist/topojson-server.js -- index.js && rollup -f cjs -o build/topojson-internals.js -- test/internals.js",
-    "test": "tape 'test/**/*-test.js' && eslint index.js src",
-    "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" -cm -o dist/topojson-server.min.js -- dist/topojson-server.js",
-    "postpublish": "git push && git push --tags && zip -j dist/topojson-server.zip -- LICENSE.md README.md dist/topojson-server.js dist/topojson-server.min.js"
+    "pretest": "rollup -c",
+    "test": "tape 'test/**/*-test.js' && eslint src test",
+    "prepublishOnly": "rm -rf dist && yarn test",
+    "postpublish": "git push && git push --tags && zip -j dist/${npm_package_name}.zip -- LICENSE README.md dist/${npm_package_name}.js dist/${npm_package_name}.min.js"
   },
   "dependencies": {
     "commander": "2"
   },
   "devDependencies": {
-    "eslint": "3",
-    "package-preamble": "0.0",
-    "rollup": "0.41",
+    "eslint": "6",
+    "rollup": "1",
+    "rollup-plugin-terser": "5",
     "tape": "4",
-    "topojson-client": "3",
-    "uglify-js": "2"
+    "topojson-client": "3"
   }
 }

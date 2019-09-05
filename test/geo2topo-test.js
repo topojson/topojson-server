@@ -29,7 +29,7 @@ testConversion(
 function testConversion(name, output, options) {
   if (!options) options = "";
   tape(name, function(test) {
-    child.exec("bin/geo2topo " + options, function(error, stdout, stderr) {
+    child.exec("bin/geo2topo " + options, function(error, stdout) {
       if (error) throw error;
       var actual = JSON.parse(stdout),
           expected = JSON.parse(fs.readFileSync(output, "utf-8"));

@@ -66,7 +66,7 @@ tape("hashmap set throws an error when full", function(test) {
   var map = hashmap(0, hash, equals), // minimum size of 16
       keys = [];
   for (var i = 0; i < 16; ++i) map.set(keys[i] = {hash: i}, true);
-  for (var i = 0; i < 16; ++i) map.set(keys[i], true); // replacing is okay
+  for (var j = 0; j < 16; ++j) map.set(keys[j], true); // replacing is okay
   test.throws(function() { map.set({hash: 16}, true); });
   test.end();
 });

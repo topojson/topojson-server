@@ -872,7 +872,7 @@ tape("topology converting a feature to a geometry preserves its id", function(te
 tape("topology converting a feature to a geometry preserves its bbox", function(test) {
   var topology = topojson.topology({foo: {type: "Feature", bbox: [0, 0, 10, 10], properties: {}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.bbox, [0, 0, 10, 10]);
-  var topology = topojson.topology({foo: {type: "Feature", properties: {}, geometry: {type: "LineString", bbox: [0, 0, 10, 10], coordinates: [[.1, .2], [.3, .4]]}}});
+  topology = topojson.topology({foo: {type: "Feature", properties: {}, geometry: {type: "LineString", bbox: [0, 0, 10, 10], coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.bbox, [0, 0, 10, 10]);
   test.end();
 });
@@ -880,11 +880,11 @@ tape("topology converting a feature to a geometry preserves its bbox", function(
 tape("topology converting a feature to a geometry preserves its properties, but only if non-empty", function(test) {
   var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George"});
-  var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "GeometryCollection", geometries: [{type: "LineString", coordinates: [[.1, .2], [.3, .4]]}]}}});
+  topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George"}, geometry: {type: "GeometryCollection", geometries: [{type: "LineString", coordinates: [[.1, .2], [.3, .4]]}]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George"});
-  var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George", demeanor: "curious"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
+  topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {name: "George", demeanor: "curious"}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.deepEqual(topology.objects.foo.properties, {name: "George", demeanor: "curious"});
-  var topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
+  topology = topojson.topology({foo: {type: "Feature", id: "Foo", properties: {}, geometry: {type: "LineString", coordinates: [[.1, .2], [.3, .4]]}}});
   test.equal(topology.objects.foo.properties, undefined);
   test.end();
 });
@@ -895,7 +895,7 @@ tape("topology converting a feature to a geometry preserves its properties, but 
 tape("topology the returned transform exactly encompasses the input geometry", function(test) {
   var topology = topojson.topology({foo: {type: "LineString", coordinates: [[1/8, 1/16], [1/2, 1/4]]}}, 2);
   test.deepEqual(topology.transform, {scale: [3/8, 3/16], translate: [1/8, 1/16]});
-  var topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 2);
+  topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 2);
   test.deepEqual(topology.transform, {scale: [3/8, 3/16], translate: [1/8, 1/16]});
   test.end();
 });
@@ -921,7 +921,7 @@ tape("topology points coordinates are integers with delta encoding", function(te
   test.deepEqual(topology.arcs, []);
   test.deepEqual(topology.objects.foo, {type: "Point", coordinates: [0, 0]});
   test.deepEqual(topology.objects.bar, {type: "Point", coordinates: [1, 1]});
-  var topology = topojson.topology({foo: {type: "MultiPoint", coordinates: [[1/8, 1/16], [1/2, 1/4]]}}, 2);
+  topology = topojson.topology({foo: {type: "MultiPoint", coordinates: [[1/8, 1/16], [1/2, 1/4]]}}, 2);
   test.deepEqual(topology.arcs, []);
   test.deepEqual(topology.objects.foo, {type: "MultiPoint", coordinates: [[0, 0], [1, 1]]});
   test.end();
@@ -957,7 +957,7 @@ tape("topology quantization precisely preserves minimum and maximum values", fun
 tape("topology precision of quantization is configurable", function(test) {
   var topology = topojson.topology({foo: {type: "LineString", coordinates: [[1/8, 1/16], [1/2, 1/16], [1/8, 1/4], [1/2, 1/4]]}}, 3);
   test.deepEqual(topology.arcs[0], [[0, 0], [2, 0], [-2, 2], [2, 0]]);
-  var topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 5);
+  topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 5);
   test.deepEqual(topology.arcs[0], [[0, 0], [4, 0], [0, 4], [-4, 0], [0, -4]]);
   test.end();
 });
@@ -966,7 +966,7 @@ tape("topology precision of quantization is configurable", function(test) {
 tape("topology coincident points are removed", function(test) {
   var topology = topojson.topology({foo: {type: "LineString", coordinates: [[1/8, 1/16], [1/8, 1/16], [1/2, 1/4], [1/2, 1/4]]}}, 2);
   test.deepEqual(topology.arcs, [[[0, 0], [1, 1]]]);
-  var topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 2);
+  topology = topojson.topology({foo: {type: "Polygon", coordinates: [[[1/8, 1/16], [1/2, 1/16], [1/2, 1/16], [1/2, 1/4], [1/8, 1/4], [1/8, 1/4], [1/8, 1/16]]]}}, 2);
   test.deepEqual(topology.arcs[0], [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1]]);
   test.end();
 });

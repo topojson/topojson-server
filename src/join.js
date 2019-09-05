@@ -1,7 +1,7 @@
-import hashset from "./hash/hashset";
-import hashmap from "./hash/hashmap";
-import equalPoint from "./hash/point-equal";
-import hashPoint from "./hash/point-hash";
+import hashset from "./hash/hashset.js";
+import hashmap from "./hash/hashmap.js";
+import equalPoint from "./hash/point-equal.js";
+import hashPoint from "./hash/point-hash.js";
 
 // Given an extracted (pre-)topology, identifies all of the junctions. These are
 // the points at which arcs (lines or rings) will need to be cut so that each

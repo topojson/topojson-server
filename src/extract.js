@@ -1,3 +1,5 @@
+import {hasOwnProperty} from "./object.js";
+
 // Extracts the lines and rings from the specified hash of geometry objects.
 //
 // Returns an object with three properties:
@@ -22,7 +24,7 @@ export default function(objects) {
       coordinates = [];
 
   function extractGeometry(geometry) {
-    if (geometry && extractGeometryType.hasOwnProperty(geometry.type)) extractGeometryType[geometry.type](geometry);
+    if (geometry && hasOwnProperty.call(extractGeometryType, geometry.type)) extractGeometryType[geometry.type](geometry);
   }
 
   var extractGeometryType = {
