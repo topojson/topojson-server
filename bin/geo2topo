@@ -13,6 +13,7 @@ commander
     .option("-o, --out <file>", "output file name; defaults to “-” for stdout", "-")
     .option("-n, --newline-delimited", "accept newline-delimited JSON")
     .option("-q, --quantization <count>", "pre-quantization parameter; 0 disables quantization", 0)
+    .option("-l, --split-layers", "Split GeoJSON features into TopoJSON layers based on feature.properties.layer")
     .parse(process.argv);
 
 if (commander.args.length < 1) commander.args[0] = "-";
@@ -37,7 +38,19 @@ function read(specifier) {
   objects[name] = undefined;
   return (commander.newlineDelimited ? readNewlineDelimitedObject : readObject)(file === "-"
       ? process.stdin : fs.createReadStream(file))
-      .then(function(object) { objects[name] = object; });
+      .then(function(object) {
+      	if (commander.splitLayers) {
+      		object.features.foreach(function(element) {
+      			var layer = element.properties.layer ? element.properties.layer : name;
+      			if (typeof objects[layer] === 'undefined') {
+      				objects[layer] = { type: 'FeatureCollection', features: [] };
+  				}
+  				objects[layer].features.push(element);
+      		});
+  		} else {
+  			objects[name] = object;
+  		} 
+      });
 }
 
 function readNewlineDelimitedObject(stream) {
