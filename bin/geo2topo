@@ -15,7 +15,10 @@ commander
     .option("-q, --quantization <count>", "pre-quantization parameter; 0 disables quantization", 0)
     .parse(process.argv);
 
-if (commander.args.length < 1) commander.args[0] = "-";
+if (commander.args.length < 1) {
+  console.log(commander.helpInformation());
+  process.exit(0);
+}
 
 var nullType = {},
     nullObject = {type: nullType},
